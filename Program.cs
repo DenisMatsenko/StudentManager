@@ -5,32 +5,30 @@ namespace Program
 {
     class Program
     {
+            
         static void Main(string[] args)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             ManagerCSV sm = new ManagerCSV();
 
-            // sm.AddStudent(new Student("Diego", 16));
+            // sm.AddStudent(new Student("Kuba", 17));
 
 
             List<Student> students = sm.GetAllStudent();
+            Student.ListWrite(students);
 
-            foreach (var student in students) {
-                Console.WriteLine(student.ToString());
-            }
-
-            List<Mark> marks = new List<Mark> {
-                new Mark (
-                    "Math",
-                    1,
-                    "Homework"
-                )
-            };
+            // List<Mark> marks = new List<Mark> {
+            //     new Mark (
+            //         "English",
+            //         1,
+            //         "Homework"
+            //     )
+            // };
 
 
-            // sm.AddMarks(students[2], marks);
+            // sm.AddMarks(students[0], marks);
 
-
-
+            // Student.ListWrite(students);
 
             // List<Student> students = new List<Student>{
             //     new Student{
@@ -65,5 +63,18 @@ namespace Program
             //     Console.WriteLine(student.Name + "\n" + student.WriteMarks());
             // }
         }
+
+
+        public static void ColorWrite(ConsoleColor collor, string str, bool newLine = false) {
+            var oldColor = Console.ForegroundColor;
+            Console.ForegroundColor = collor;
+            if (newLine)
+                System.Console.WriteLine(str);
+            else 
+                System.Console.Write(str);
+            Console.ForegroundColor = oldColor;
+        }
     }
+
+
 }

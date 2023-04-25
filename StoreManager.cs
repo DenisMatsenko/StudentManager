@@ -27,11 +27,11 @@ namespace Program
         public void AddStudent(Student student) {
             CheckFileExistence();
             List<string> students = File.ReadAllLines(STUDENT_FILE).ToList();
-            students.Add($"{student.Name},{student.Age}");
+            students.Add($"{student.ID},{student.Name},{student.Age}");
 
             students = students.
-                OrderBy(s => s.Split(',')[0]).
-                ThenBy(s => s.Split(',')[1]).
+                OrderBy(s => s.Split(',')[1]).
+                ThenBy(s => s.Split(',')[2]).
                 ToList();
             File.WriteAllLines(STUDENT_FILE, students);
         }
@@ -39,14 +39,13 @@ namespace Program
             CheckFileExistence();
             List<string> rMarks = File.ReadAllLines(MARKS_FILE).ToList();
             foreach (var mark in marks) {
-                string line = $"{student.Name},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
+                string line = $"{student.ID},{mark.ID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
                 rMarks.Add(line);
             }
             rMarks = rMarks.
-                OrderBy(s => s.Split(',')[0]).
-                ThenBy(s => s.Split(',')[1]).
-                ThenBy(s => s.Split(',')[2]).
+                OrderBy(s => s.Split(',')[2]).
                 ThenBy(s => s.Split(',')[3]).
+                ThenBy(s => s.Split(',')[4]).
                 ToList();
             File.WriteAllLines(MARKS_FILE, rMarks);
         }
@@ -62,16 +61,16 @@ namespace Program
             List<Student> studentList = new List<Student>();
             foreach (var student in rStudents) {
                 string[] studentInfo = student.Split(',');
-                if(studentInfo.Length != 2)
+                if(studentInfo.Length != 3)
                     continue;
-                Student newStudent = new Student(studentInfo[0], int.Parse(studentInfo[1]));
+                Student newStudent = new Student(studentInfo[0], studentInfo[1], int.Parse(studentInfo[2]));
                 List<Mark> marks = new List<Mark>();
                 foreach (var mark in rMarks) {
                     string[] markInfo = mark.Split(',');
-                    if(markInfo.Length != 4)
+                    if(markInfo.Length != 5)
                         continue;
-                    if (markInfo[0] == newStudent.Name) {
-                        Mark newMark = new Mark(markInfo[1], int.Parse(markInfo[2]), markInfo[3]);
+                    if (markInfo[0] == newStudent.ID) {
+                        Mark newMark = new Mark(markInfo[2], int.Parse(markInfo[3]), markInfo[4]);
                         marks.Add(newMark);
                     }
                 }
@@ -80,6 +79,5 @@ namespace Program
             }
             return studentList;
         }
-
     }
 }
