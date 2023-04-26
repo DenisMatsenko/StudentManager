@@ -5,56 +5,61 @@ namespace Program {
     public class Student {
         public string ID { get; set; }
         public string Name { get; set; }
+        public string LastName { get; set; }
+        public int BirthYear { get; set; }
         public int Age { get; set; }
-        public List<Mark> Marks = new List<Mark>();
-        public Student(string id, string name, int age) {
+        private List<Mark> Marks = new List<Mark>();
+        public void AddMark (Mark mark) {
+            Marks.Add(mark);
+        }
+        public static string ConvertToID(string name, string lastName) {
+            return (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
+        }
+        public Student() {}
+        public Student(string id, string name, string lastName, int age) {
             ID = id;
             Name = name;
+            LastName = lastName;
             Age = age;
+            BirthYear = DateTime.Now.Year - age;
         }
-
-        public Student(string name, int age) {
-            ID = Guid.NewGuid().ToString();
+        public Student(string name, string lastName, int age) {
+            ID = (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
             Name = name;
+            LastName = lastName;
             Age = age;
+            BirthYear = DateTime.Now.Year - age;
         }
         public void Write() {
-            Program.ColorWrite(ConsoleColor.Green, $"Name: {Name}, Age: {Age} ");
-            Program.ColorWrite(ConsoleColor.Red, ID, true);
+            Program.ColorWrite(ConsoleColor.Green, $"{Name} {LastName} - {Age}\n");
             foreach (var mark in Marks) {
                 mark.Write();
             }
         }
-        public static void ListWrite(List<Student> students) {
-            foreach (var student in students) {
-                student.Write();
+        public static void ListWrite(Dictionary<string, Student> students) {
+            foreach (KeyValuePair<string, Student> item in students) {
+                item.Value.Write();
             }
         }
     }
 
     public class Mark {
-        public string ID { get; set; }
+        public string StudentID { get; set; }
         public string SubjectName { get; set; }
         public string Description { get; set; }
         public int MarkValue { get; set; }
 
-        public Mark(string subjectName, int markValue, string description) {
-            ID = Guid.NewGuid().ToString();
-            SubjectName = subjectName;
-            MarkValue = markValue;
-            Description = description;
-        }
+        public Mark() {}
 
-        public Mark(string id, string subjectName, int markValue, string description) {
-            ID = id;
+        public Mark(string studentId, string subjectName, int markValue, string description) {
+            StudentID = studentId;
             SubjectName = subjectName;
             MarkValue = markValue;
             Description = description;
         }
 
         public void Write() {
-            Program.ColorWrite(ConsoleColor.Yellow, $"\t{SubjectName} - {MarkValue} - {Description} ");
-            Program.ColorWrite(ConsoleColor.Red, ID, true);
+            Program.ColorWrite(ConsoleColor.Yellow, $"\t{SubjectName} - {MarkValue} - {Description}\n");
         }
     }
 }

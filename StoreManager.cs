@@ -8,12 +8,13 @@ namespace Program
     public interface IStudentStoreManager
     {
         void AddStudent(Student student);
-        void AddMarks(Student student, List<Mark> marks);
-        List<Student> GetAllStudent();
+        void AddMark(Mark mark);
+        Dictionary<string, Student> GetAllStudent();
     }
-
     class ManagerCSV : IStudentStoreManager
     {
+        
+
         const string STUDENT_FILE = "students.csv";
         const string MARKS_FILE = "marks.csv";
 
@@ -26,58 +27,45 @@ namespace Program
         
         public void AddStudent(Student student) {
             CheckFileExistence();
-            List<string> students = File.ReadAllLines(STUDENT_FILE).ToList();
-            students.Add($"{student.ID},{student.Name},{student.Age}");
-
-            students = students.
-                OrderBy(s => s.Split(',')[1]).
-                ThenBy(s => s.Split(',')[2]).
-                ToList();
-            File.WriteAllLines(STUDENT_FILE, students);
+            string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";
+            File.AppendAllText(STUDENT_FILE, line + Environment.NewLine);
         }
-        public void AddMarks(Student student, List<Mark> marks) {
+        public void AddMark(Mark mark) {
             CheckFileExistence();
-            List<string> rMarks = File.ReadAllLines(MARKS_FILE).ToList();
-            foreach (var mark in marks) {
-                string line = $"{student.ID},{mark.ID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
-                rMarks.Add(line);
-            }
-            rMarks = rMarks.
-                OrderBy(s => s.Split(',')[2]).
-                ThenBy(s => s.Split(',')[3]).
-                ThenBy(s => s.Split(',')[4]).
-                ToList();
-            File.WriteAllLines(MARKS_FILE, rMarks);
+            string line = $"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
+            File.AppendAllText(MARKS_FILE, line + Environment.NewLine);
         }
 
-        public List<Student> GetAllStudent() {
+        public Dictionary<string, Student> GetAllStudent() {
             CheckFileExistence();
 
-            List<string> rStudents = File.ReadAllLines(STUDENT_FILE).ToList();
-            List<string> rMarks = File.ReadAllLines(MARKS_FILE).ToList();
-
-            // * This part of code will iterate through the list of students and marks
-            // * and return a new list of students with thair marks
-            List<Student> studentList = new List<Student>();
-            foreach (var student in rStudents) {
-                string[] studentInfo = student.Split(',');
-                if(studentInfo.Length != 3)
-                    continue;
-                Student newStudent = new Student(studentInfo[0], studentInfo[1], int.Parse(studentInfo[2]));
-                List<Mark> marks = new List<Mark>();
-                foreach (var mark in rMarks) {
-                    string[] markInfo = mark.Split(',');
-                    if(markInfo.Length != 5)
-                        continue;
-                    if (markInfo[0] == newStudent.ID) {
-                        Mark newMark = new Mark(markInfo[2], int.Parse(markInfo[3]), markInfo[4]);
-                        marks.Add(newMark);
-                    }
-                }
-                newStudent.Marks = marks;
-                studentList.Add(newStudent);
+            Dictionary<string, Student> students = new Dictionary<string, Student>();
+            string[] rStudents = File.ReadAllLines(STUDENT_FILE);
+            foreach (var rStudent in rStudents) {
+                string[] student = rStudent.Split(',');
+                Student newStudent = new Student{
+                    ID = student[0],
+                    Name = student[1],
+                    LastName = student[2],
+                    BirthYear = int.Parse(student[3]),
+                    Age = int.Parse(student[4])
+                };
+                students.Add(newStudent.ID, newStudent);
             }
-            return studentList;
+
+            string[] rMarks = File.ReadAllLines(MARKS_FILE);
+            foreach (var rMark in rMarks) {
+                string[] mark = rMark.Split(',');
+                Mark newMark = new Mark{
+                    StudentID = mark[0],
+                    SubjectName = mark[1],
+                    MarkValue = int.Parse(mark[2]),
+                    Description = mark[3]
+                };
+                students[newMark.StudentID].AddMark(newMark);
+            }
+
+            return students;
         }
     }
 }
