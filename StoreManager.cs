@@ -9,12 +9,11 @@ namespace Program
     {
         void AddStudent(Student student);
         void AddMark(Mark mark);
+        void DeleteStudent(Student student, Dictionary<string, Student> students);
         Dictionary<string, Student> GetAllStudent();
     }
     class ManagerCSV : IStudentStoreManager
     {
-        
-
         const string STUDENT_FILE = "students.csv";
         const string MARKS_FILE = "marks.csv";
 
@@ -30,12 +29,36 @@ namespace Program
             string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";
             File.AppendAllText(STUDENT_FILE, line + Environment.NewLine);
         }
+        public void DeleteStudent(Student studentToDelete, Dictionary<string, Student> students) {
+            CheckFileExistence();
+            File.WriteAllText(STUDENT_FILE, "");
+            File.WriteAllText(MARKS_FILE, "");
+
+            foreach (KeyValuePair<string, Student> studentObject in students)
+            {
+                if(studentObject.Key != studentToDelete.ID) {
+                    System.Console.WriteLine(studentObject.Value.ID);
+                    AddStudent(studentObject.Value);
+                    foreach (var mark in studentObject.Value.GetAllMarks())
+                    {
+                        AddMark(mark);
+                    }
+                }
+            }
+        }
         public void AddMark(Mark mark) {
             CheckFileExistence();
             string line = $"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
             File.AppendAllText(MARKS_FILE, line + Environment.NewLine);
         }
+        public void DeleteMark(Mark mark) {
+            CheckFileExistence();
+            File.WriteAllText(MARKS_FILE, "");
 
+            List<string> marksStrList = File.ReadAllLines(MARKS_FILE).ToList();
+            marksStrList.Remove($"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}");
+            File.WriteAllLines(MARKS_FILE, marksStrList.ToArray());
+        }
         public Dictionary<string, Student> GetAllStudent() {
             CheckFileExistence();
 

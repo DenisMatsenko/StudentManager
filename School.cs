@@ -12,6 +12,12 @@ namespace Program {
         public void AddMark (Mark mark) {
             Marks.Add(mark);
         }
+        public void RemoveMark (Mark mark) {
+            Marks.Remove(mark);
+        }
+        public List<Mark> GetAllMarks() {
+            return Marks;
+        }
         public static string ConvertToID(string name, string lastName) {
             return (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
         }

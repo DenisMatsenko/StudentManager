@@ -72,7 +72,17 @@ namespace Program
             sm.AddStudent(student);
         }
         private static void DeleteStudent() {
-            //Todo
+            Console.Clear();
+            Console.WriteLine("Enter student first name:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Enter student last name:");
+            string lastName = Console.ReadLine();
+            Console.WriteLine("Enter student age:");
+            int age = int.Parse(Console.ReadLine());
+            Student student = new Student(name, lastName, age);
+
+            students.Remove(student.ID);
+            sm.DeleteStudent(student, students);
         }
         private static void UpdateStudent() {
             //Todo
@@ -96,7 +106,23 @@ namespace Program
             sm.AddMark(mark);
         }
         private static void DeleteMark() {
-            //Todo
+            Console.Clear();
+            Console.WriteLine("Enter student first name:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Enter student last name:");
+            string lastName = Console.ReadLine();
+            string id = Student.ConvertToID(name, lastName);
+            Console.WriteLine("Enter subject name:");
+            string subjectName = Console.ReadLine();
+            Console.WriteLine("Enter mark value:");
+            int markValue = int.Parse(Console.ReadLine());
+            Console.WriteLine("Enter mark description:");
+            string description = Console.ReadLine();
+
+
+            Mark mark = new Mark(id, subjectName, markValue, description);
+            students[id].RemoveMark(mark);
+            sm.DeleteMark(mark);
         }
         private static void UpdateMark() {
             //Todo
