@@ -42,7 +42,7 @@ namespace Program {
                 mark.Write();
             }
         }
-        public static void ListWrite(Dictionary<string, Student> students) {
+        public static void WriteAll(Dictionary<string, Student> students) {
             foreach (KeyValuePair<string, Student> item in students) {
                 item.Value.Write();
             }

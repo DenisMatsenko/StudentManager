@@ -29,8 +29,10 @@ namespace Program
             string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";
             File.AppendAllText(STUDENT_FILE, line + Environment.NewLine);
         }
-        public void DeleteStudent(Student studentToDelete, Dictionary<string, Student> students) {
+        public void DeleteStudent(Student std, Dictionary<string, Student> students) {
             CheckFileExistence();
+            Student studentToDelete = students[std.ID];
+
             List<string> studentStrList = File.ReadAllLines(STUDENT_FILE).ToList();
             studentStrList.Remove($"{studentToDelete.ID},{studentToDelete.Name},{studentToDelete.LastName},{studentToDelete.BirthYear},{studentToDelete.Age}");
             File.WriteAllLines(STUDENT_FILE, studentStrList.ToArray());
