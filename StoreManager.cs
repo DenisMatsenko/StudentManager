@@ -31,19 +31,12 @@ namespace Program
         }
         public void DeleteStudent(Student studentToDelete, Dictionary<string, Student> students) {
             CheckFileExistence();
-            File.WriteAllText(STUDENT_FILE, "");
-            File.WriteAllText(MARKS_FILE, "");
+            List<string> studentStrList = File.ReadAllLines(STUDENT_FILE).ToList();
+            studentStrList.Remove($"{studentToDelete.ID},{studentToDelete.Name},{studentToDelete.LastName},{studentToDelete.BirthYear},{studentToDelete.Age}");
+            File.WriteAllLines(STUDENT_FILE, studentStrList.ToArray());
 
-            foreach (KeyValuePair<string, Student> studentObject in students)
-            {
-                if(studentObject.Key != studentToDelete.ID) {
-                    System.Console.WriteLine(studentObject.Value.ID);
-                    AddStudent(studentObject.Value);
-                    foreach (var mark in studentObject.Value.GetAllMarks())
-                    {
-                        AddMark(mark);
-                    }
-                }
+            foreach(Mark mark in studentToDelete.GetAllMarks()) {
+                DeleteMark(mark);
             }
         }
         public void AddMark(Mark mark) {
@@ -53,8 +46,6 @@ namespace Program
         }
         public void DeleteMark(Mark mark) {
             CheckFileExistence();
-            File.WriteAllText(MARKS_FILE, "");
-
             List<string> marksStrList = File.ReadAllLines(MARKS_FILE).ToList();
             marksStrList.Remove($"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}");
             File.WriteAllLines(MARKS_FILE, marksStrList.ToArray());
