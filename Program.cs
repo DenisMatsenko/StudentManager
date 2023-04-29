@@ -102,13 +102,13 @@ namespace Program
             string lastName = Console.ReadLine();
             Console.WriteLine("Enter new student age:");
             int age = int.Parse(Console.ReadLine());
-            Student student = new Student(name, lastName, age);
 
-            fm.DeleteStudent(students[student.ID], students);
-            students.Remove(student.ID);
-
-            fm.AddStudent(student);
-            students.Add(student.ID, student);
+            // ! Need explanation
+            string studentId = Student.ConvertToID(name, lastName);
+            Student studentOld = students[studentId];
+            fm.DeleteStudent(studentOld, students);
+            students[studentId].Age = age;
+            fm.AddStudent(students[studentId]);
         }
         private static void AddMark() {
             Console.Clear();

@@ -28,6 +28,12 @@ namespace Program
             CheckFileExistence();
             string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";
             File.AppendAllText(STUDENT_FILE, line + Environment.NewLine);
+
+            // ! Need to add marks
+            foreach (Mark mark in student.GetAllMarks())
+            {
+                AddMark(mark);
+            }
         }
         public void DeleteStudent(Student std, Dictionary<string, Student> students) {
             CheckFileExistence();
