@@ -181,6 +181,4 @@ namespace Program
             Student.WriteAll(students);
         }
     }
-
-
 }

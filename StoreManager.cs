@@ -7,23 +7,23 @@ namespace Program
 {
     public interface IStudentStoreManager
     {
+        void CheckFileExistence();
         void AddStudent(Student student);
-        void AddMark(Mark mark);
-        void DeleteStudent(Student student, Dictionary<string, Student> students);
+        void DeleteStudent(Student std, Dictionary<string, Student> students);
         Dictionary<string, Student> GetAllStudent();
+        void AddMark(Mark mark);
+        void DeleteMark(Mark mark);
     }
     class ManagerCSV : IStudentStoreManager
     {
         const string STUDENT_FILE = "students.csv";
         const string MARKS_FILE = "marks.csv";
-
-        private void CheckFileExistence() {
+        public void CheckFileExistence() {
             if(!File.Exists(STUDENT_FILE))
                 File.Create(STUDENT_FILE).Close();
             if(!File.Exists(MARKS_FILE))
                 File.Create(MARKS_FILE).Close();
         }
-        
         public void AddStudent(Student student) {
             CheckFileExistence();
             string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";

@@ -9,18 +9,11 @@ namespace Program {
         public int BirthYear { get; set; }
         public int Age { get; set; }
         private List<Mark> Marks = new List<Mark>();
-        public void AddMark (Mark mark) {
-            Marks.Add(mark);
-        }
-        public void RemoveMark (Mark mark) {
-            Marks.Remove(mark);
-        }
-        public List<Mark> GetAllMarks() {
-            return Marks;
-        }
-        public static string ConvertToID(string name, string lastName) {
-            return (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
-        }
+        public void AddMark (Mark mark) => Marks.Add(mark);
+        public void RemoveMark (Mark mark) => Marks.Remove(mark);
+        public List<Mark> GetAllMarks() => Marks;
+        public static string ConvertToID(string name, string lastName) => 
+            (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
         public Student() {}
         public Student(string id, string name, string lastName, int age) {
             ID = id;
@@ -54,18 +47,14 @@ namespace Program {
         public string SubjectName { get; set; }
         public string Description { get; set; }
         public int MarkValue { get; set; }
-
         public Mark() {}
-
         public Mark(string studentId, string subjectName, int markValue, string description) {
             StudentID = studentId;
             SubjectName = subjectName;
             MarkValue = markValue;
             Description = description;
         }
-
-        public void Write() {
-            Program.ColorWrite(ConsoleColor.Yellow, $"\t{SubjectName} - {MarkValue} - {Description}\n");
-        }
+        public void Write()
+            => Program.ColorWrite(ConsoleColor.Yellow, $"\t{SubjectName} - {MarkValue} - {Description}\n");
     }
 }
