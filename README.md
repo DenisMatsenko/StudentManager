@@ -38,7 +38,11 @@ To parse data in files, such as CSV or JSON files, you can use various libraries
 ---
 
 ### Collections
-I used a Dictionary to store students and a List to store marks. I chose a Dictionary because the program will assign many marks to students and using a key is better than iterating through all students.(A dictionary is better than a list when you want to look up a value using a key. A dictionary uses a hash function to find the value in one step. A list requires iterating through the elements until you find the match. This can take many steps.) I chose a List to store marks because it is easy to use in development.
+I used a dictionary to store students because the most important program feature of adding marks to specific students required fast access to those students.
+- A Dictionary is better for finding an element because it has a time complexity of O(1), meaning it takes a constant amount of time, while a List has a time complexity of O(n), meaning it takes longer as the List grows. Therefore, a Dictionary is a faster and more efficient option for searching elements in a data structure.
+
+I used a List to store students because the most important program feature of adding marks to students required fast adding new elemet to collection.
+- A List is a good choice for adding new elements because it is designed as a dynamic array, allowing for efficient adding new elements to the end with a time complexity of O(1) or O(n) if the capacity of the list needs to be increased.
 
 
 
