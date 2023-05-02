@@ -9,10 +9,11 @@ namespace Program
     {
         void CheckFileExistence();
         void AddStudent(Student student);
-        void DeleteStudent(Student std, Dictionary<string, Student> students);
+        void DeleteStudent(Student std, Dictionary<string, Student> students, bool deleteMarks = true);
         Dictionary<string, Student> GetAllStudent();
-        void AddMark(Mark mark);
-        void DeleteMark(Mark mark);
+        void AddMark(Mark mark, string studentID);
+        void DeleteMarks(List<Mark> marks, string studentID);
+        void DeleteMark(Mark mark, string studentID);
     }
     class ManagerCSV : IStudentStoreManager
     {
@@ -28,14 +29,8 @@ namespace Program
             CheckFileExistence();
             string line = $"{student.ID},{student.Name},{student.LastName},{student.BirthYear},{student.Age}";
             File.AppendAllText(STUDENT_FILE, line + Environment.NewLine);
-
-            // ! Need to add marks
-            foreach (Mark mark in student.GetAllMarks())
-            {
-                AddMark(mark);
-            }
         }
-        public void DeleteStudent(Student std, Dictionary<string, Student> students) {
+        public void DeleteStudent(Student std, Dictionary<string, Student> students, bool deleteMarks = true) {
             CheckFileExistence();
             Student studentToDelete = students[std.ID];
 
@@ -43,19 +38,28 @@ namespace Program
             studentStrList.Remove($"{studentToDelete.ID},{studentToDelete.Name},{studentToDelete.LastName},{studentToDelete.BirthYear},{studentToDelete.Age}");
             File.WriteAllLines(STUDENT_FILE, studentStrList.ToArray());
 
-            foreach(Mark mark in studentToDelete.GetAllMarks()) {
-                DeleteMark(mark);
+            if (deleteMarks) {
+                DeleteMarks(studentToDelete.GetAllMarks(), studentToDelete.ID);
             }
         }
-        public void AddMark(Mark mark) {
+        public void AddMark(Mark mark, string studentID) {
             CheckFileExistence();
-            string line = $"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
+            string line = $"{studentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}";
             File.AppendAllText(MARKS_FILE, line + Environment.NewLine);
         }
-        public void DeleteMark(Mark mark) {
+        public void DeleteMark(Mark mark, string studentID) {
             CheckFileExistence();
             List<string> marksStrList = File.ReadAllLines(MARKS_FILE).ToList();
-            marksStrList.Remove($"{mark.StudentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}");
+            marksStrList.Remove($"{studentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}");
+            File.WriteAllLines(MARKS_FILE, marksStrList.ToArray());
+        }
+
+        public void DeleteMarks(List<Mark> marks, string studentID) {
+            CheckFileExistence();
+            List<string> marksStrList = File.ReadAllLines(MARKS_FILE).ToList();
+            foreach(Mark mark in marks) {
+                marksStrList.Remove($"{studentID},{mark.SubjectName},{mark.MarkValue},{mark.Description}");
+            }
             File.WriteAllLines(MARKS_FILE, marksStrList.ToArray());
         }
         public Dictionary<string, Student> GetAllStudent() {
@@ -79,12 +83,11 @@ namespace Program
             foreach (var rMark in rMarks) {
                 string[] mark = rMark.Split(',');
                 Mark newMark = new Mark{
-                    StudentID = mark[0],
                     SubjectName = mark[1],
                     MarkValue = int.Parse(mark[2]),
                     Description = mark[3]
                 };
-                students[newMark.StudentID].AddMark(newMark);
+                students[mark[0]].AddMark(newMark);
             }
 
             return students;

@@ -6,7 +6,7 @@ namespace Program
     class Program
     {
         private static Dictionary<string, Student> students;
-        private static ManagerCSV fm;
+        private static IStudentStoreManager fm;
         public static void ColorWrite(ConsoleColor collor, string str, bool newLine = false) {
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = collor;
@@ -103,10 +103,11 @@ namespace Program
             Console.WriteLine("Enter new student age:");
             int age = int.Parse(Console.ReadLine());
 
-            // ! Need explanation
+
             string studentId = Student.ConvertToID(name, lastName);
             Student studentOld = students[studentId];
-            fm.DeleteStudent(studentOld, students);
+
+            fm.DeleteStudent(studentOld, students, false);
             students[studentId].Age = age;
             fm.AddStudent(students[studentId]);
         }
@@ -123,10 +124,10 @@ namespace Program
             int markValue = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter mark description:");
             string description = Console.ReadLine();
-            Mark mark = new Mark(id, subjectName, markValue, description);
+            Mark mark = new Mark(subjectName, markValue, description);
 
             students[id].AddMark(mark);
-            fm.AddMark(mark);
+            fm.AddMark(mark, id);
         }
         private static void DeleteMark() {
             Console.Clear();
@@ -143,9 +144,9 @@ namespace Program
             string description = Console.ReadLine();
 
 
-            Mark mark = new Mark(id, subjectName, markValue, description);
+            Mark mark = new Mark(subjectName, markValue, description);
             students[id].RemoveMark(mark);
-            fm.DeleteMark(mark);
+            fm.DeleteMark(mark, id);
         }
         private static void UpdateMark() {
             Console.Clear();
@@ -168,13 +169,13 @@ namespace Program
             Console.WriteLine("Enter new mark value:");
             int markValueNew = int.Parse(Console.ReadLine());
 
-            Mark markOld = new Mark(id, subjectName, markValueOld, description);
-            Mark markNew = new Mark(id, subjectName, markValueNew, description);
+            Mark markOld = new Mark(subjectName, markValueOld, description);
+            Mark markNew = new Mark(subjectName, markValueNew, description);
 
             students[id].RemoveMark(markOld);
-            fm.DeleteMark(markOld);
+            fm.DeleteMark(markOld, Student.ConvertToID(name, lastName));
             students[id].AddMark(markNew);
-            fm.AddMark(markNew);
+            fm.AddMark(markNew, Student.ConvertToID(name, lastName));
         }
         private static void ShowAllStudents() {
             Console.Clear();

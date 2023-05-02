@@ -15,13 +15,6 @@ namespace Program {
         public static string ConvertToID(string name, string lastName) => 
             (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
         public Student() {}
-        public Student(string id, string name, string lastName, int age) {
-            ID = id;
-            Name = name;
-            LastName = lastName;
-            Age = age;
-            BirthYear = DateTime.Now.Year - age;
-        }
         public Student(string name, string lastName, int age) {
             ID = (lastName.Substring(0, 4) + name.Substring(0, 2)).ToLower();
             Name = name;
@@ -43,13 +36,11 @@ namespace Program {
     }
 
     public class Mark {
-        public string StudentID { get; set; }
         public string SubjectName { get; set; }
         public string Description { get; set; }
         public int MarkValue { get; set; }
         public Mark() {}
-        public Mark(string studentId, string subjectName, int markValue, string description) {
-            StudentID = studentId;
+        public Mark(string subjectName, int markValue, string description) {
             SubjectName = subjectName;
             MarkValue = markValue;
             Description = description;
